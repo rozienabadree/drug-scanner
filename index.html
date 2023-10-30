@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <title> Drug-Scanner </title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="icon" type="image/png" href="">
+    <style>
+        .tabcode {
+            display: inline-block;
+            margin-left: 160px;
+        }
+
+        .listcode {
+            display: inline-block;
+            margin-left: 85px;
+        }
+    </style>
+</head>
+
+<body>
+    <center>
+        <h1>Drug-Scanner</h1>
+        <h3>*This site is for educational purposes only.</h3>
+    </center>
+    <div class="menu">
+        <button class="tablink" onclick="openPage('main', this)" id="defaultOpen">Overview & Search</button>
+        <button class="tablink" onclick="openPage('barcode', this)" id="defaultOpen">Barcode Generation</button>
+        <button class="tablink" onclick="openPage('database', this)">The DrugHub</button>
+        <button class="tablink" onclick="openPage('reporting', this)">Reporting</button>
+        <button class="tablink" onclick="openPage('contact', this)">Contact</button>
+    </div>
+
+    <div id="main" class="pagecontent">
+        <h2> Overview </h2>
+        <p>
+            According World Health Organization, the global counterfeit drug market’s profits range from $75 to $200 billion annually and often make up half of all drugs sold in low-income countries. This website was designed as part of a school project to tackle this issue.
+            <br>
+            <br>
+            On this page, you can search for a drug by name or barcode below. The idea is that each drug's "smart tag" or barcode is unique and the consumer can track and confirm the birthplace and location of each item. Counterfeit drugs will not show up on the platform and if a "smart tag" or barcode is somehow duplicated, a search will indicate when and where the genuine item was manufactured and sold, thereby revealing the duplicate as a fake.
+            <br>
+            <br>            
+            The full drugs database can be found on The DrugHub page, which requires a login; a comprehensive report complete with methodoloy can be found on the Reporting page and lastly, if you have any questions, please feel free to send a message using the form on the Contact page.
+            <br>
+            <br>
+            If you read any of the above, thank you.
+            <br>
+            <br>
+        </p>
+        <h2> Search </h2>
+        <h3>To begin, please enter the barcode or name of a drug below. For additional instructions on how to use this tool, please click here.</h3>
+        <center>
+            <script type="text/javascript" src="https://c1hmf904.caspio.com/dp/d044d000f415c48a3c004775b868/emb"></script>
+        </center>
+    </div>
+
+    <div id="barcode" class="pagecontent">
+        <div class="forms-container">
+            <div class="form">
+                <h2>Single Barcode Generator</h2>
+                <!-- Create a form to input data for the barcode -->
+                <form id="barcodeForm">
+                    <label for="barcodeData">Data:</label>
+                    <input type="text" id="barcodeData" placeholder="Enter data">
+                    <br>
+                    <label for="barcodeType">Barcode Type:</label>
+                    <select id="barcodeType">
+                        <option value="QR Code">QR Code</option>
+                        <option value="UPC-A">UPC-A</option>
+                        <option value="EAN-13">EAN-13</option>
+                    </select>
+                    <br>
+                    <button type="button" onclick="generateBarcode()">Generate Barcode</button>
+                </form>
+                <!-- Display the generated barcode here -->
+                <div id="barcodeOutput"></div>
+            
+                <!-- Add a download button and link -->
+                <button type="button" id="downloadButton" onclick="downloadBarcode()">Download Barcode</button>
+            </div>
+
+            <div class="form">
+                <h2>Bulk Barcode Generator</h2>
+                <!-- Create a form to input data for bulk barcode generation -->
+                <form id="bulkBarcodeForm">
+                    <label for="csvFile">Upload CSV File:</label>
+                    <input type="file" id="csvFile" accept=".csv">
+                    <br>
+                    <label for="barcodeType">Barcode Type:</label>
+                    <select id="barcodeType">
+                        <option value="QR Code">QR Code</option>
+                        <option value="UPC-A">UPC-A</option>
+                        <option value="EAN-13">EAN-13</option>
+                    </select>
+                    <br>
+                    <button type="button" onclick="generateBulkBarcodes()">Generate Bulk Barcodes</button>
+                </form>
+                <!-- Display the generated bulk barcodes here -->
+                <div id="bulkBarcodeOutput"></div>
+                
+                <!-- Add a download button for the bulk barcode PDF -->
+                <button type="button" id="downloadBulkButton" onclick="downloadBulkBarcodes()" disabled>Download Bulk Barcodes (PDF)</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="database" class="pagecontent">
+        <center>
+            <script type="text/javascript" src="https://c1hmf904.caspio.com/dp/d044d00099be1292bc494a6496e9/emb"></script>
+        </center>
+    </div>
+
+    <div id="reporting" class="pagecontent">
+        <h3>Reporting (an updated version to follow soon)</h3>
+        <p>Below is a report that provides a broad look at counterfeiting to make clear its economic impact in the global market and the thinking/methodology behind this site. It is worth the read.</p>
+ 
+        <embed 
+        src="http://infolab.stanford.edu/pub/papers/google.pdf#toolbar=0&navpanes=0&scrollbar=0" type="application/pdf"
+        frameBorder="0" 
+        scrolling="auto" 
+        height="900px%" 
+        width="100%">
+        </embed>
+    </div>
+
+    <!-- My contact me page -->
+    <div id="contact" class="pagecontent">
+        <h3>TBA</h3>
+    </div>
+
+    <script>
+        // For the menu
+        function openPage(pageName, elmnt) {
+            // Hide all elements with class="pagecontent" by default
+            var i, pagecontent, tablinks;
+            pagecontent = document.getElementsByClassName("pagecontent");
+            for (i = 0; i < pagecontent.length; i++) {
+                pagecontent[i].style.display = "none";
+            }
+            // Show the specific tab content
+            document.getElementById(pageName).style.display = "block";
+        }
+        // Get the element with id="defaultOpen" and click on it
+        document.getElementById("defaultOpen").click();
+    </script>
+
+    <script>
+        // For the barcode generator
+        var generatedBarcode = null;
+
+        function generateBarcode() {
+            // Get input data and selected barcode type
+            var data = document.getElementById("barcodeData").value;
+            var barcodeType = document.getElementById("barcodeType").value;
+
+            // Generate the barcode (Replace this with your actual barcode generation code)
+            generatedBarcode = generateBarcodeImage(data, barcodeType);
+
+            // Display the barcode on the page
+            var barcodeOutput = document.getElementById("barcodeOutput");
+            barcodeOutput.innerHTML = "";
+            barcodeOutput.appendChild(generatedBarcode);
+
+            // Enable the download button
+            document.getElementById("downloadButton").disabled = false;
+        }
+
+        function downloadBarcode() {
+            if (generatedBarcode) {
+                // Create an anchor element for downloading the barcode
+                var downloadLink = document.createElement("a");
+                downloadLink.href = generatedBarcode.src;
+                downloadLink.download = "barcode.png"; // Specify the filename for download
+                downloadLink.click();
+            }
+        }
+
+        // Function to generate a barcode image (Replace this with your actual barcode generation code)
+        function generateBarcodeImage(data, barcodeType) {
+            var barcodeImage = document.createElement("img");
+            barcodeImage.src = "barcode_generation_script.php?data=" + encodeURIComponent(data) + "&type=" + encodeURIComponent(barcodeType);
+            barcodeImage.alt = barcodeType;
+            return barcodeImage;
+        }
+    </script>
+
+    <script>
+        var generatedBulkBarcodes = null;
+
+        function generateBulkBarcodes() {
+            var csvFileInput = document.getElementById("csvFile");
+            var barcodeType = document.getElementById("barcodeType").value;
+
+            if (csvFileInput.files.length === 0) {
+                alert("Please select a CSV file.");
+                return;
+            }
+
+            var file = csvFileInput.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function (event) {
+                var csvData = event.target.result;
+                var lines = csvData.split("\n");
+                var barcodes = [];
+
+                for (var i = 0; i < lines.length; i++) {
+                    var data = lines[i].trim();
+                    if (data.length > 0) {
+                        // Generate the barcode image for each line of data
+                        var barcodeImage = generateBarcodeImage(data, barcodeType);
+                        barcodes.push(barcodeImage);
+                    }
+                }
+
+                generatedBulkBarcodes = barcodes;
+
+                // Display the bulk barcodes on the page
+                var bulkBarcodeOutput = document.getElementById("bulkBarcodeOutput");
+                bulkBarcodeOutput.innerHTML = "";
+                for (var j = 0; j < barcodes.length; j++) {
+                    bulkBarcodeOutput.appendChild(barcodes[j]);
+                }
+
+                // Enable the download button for bulk barcodes
+                document.getElementById("downloadBulkButton").disabled = false;
+            };
+
+            reader.readAsText(file);
+        }
+
+        function downloadBulkBarcodes() {
+            if (generatedBulkBarcodes && generatedBulkBarcodes.length > 0) {
+                var doc = new jsPDF();
+                for (var i = 0; i < generatedBulkBarcodes.length; i++) {
+                    if (i > 0) {
+                        doc.addPage(); // Add a new page for each barcode
+                    }
+                    var barcodeImage = generatedBulkBarcodes[i];
+                    doc.addImage(barcodeImage.src, 'PNG', 10, 10, 100, 100); // Adjust the position and size as needed
+                }
+                doc.save("bulk_barcodes.pdf");
+            }
+        }
+
+        // Function to generate a barcode image (Replace this with your actual barcode generation code)
+        function generateBarcodeImage(data, barcodeType) {
+            var barcodeImage = new Image();
+            barcodeImage.src = "barcode_generation_script.php?data=" + encodeURIComponent(data) + "&type=" + encodeURIComponent(barcodeType);
+            barcodeImage.alt = barcodeType;
+            return barcodeImage;
+        }
+    </script>
+    
+    <!-- Include the jsPDF library for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
+</body>
+
+</html>
