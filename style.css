@@ -29,7 +29,7 @@ body {
     border: 1px solid #3d0c07;
     background-color: white;
     font-family: monospace;
-    font-size: large;
+    font-size: 16px;
 }
 
 /* Style the buttons that are used to open the menu's content */
@@ -61,7 +61,7 @@ body {
     /* border: 1px solid #ccc; */
     border-top: none;
     font-family: monospace;
-    font-size: medium;
+    font-size: 14px;
     height: 100%;
 }
 
