@@ -16,6 +16,7 @@
             margin-left: 85px;
         }
     </style>
+    <script src="https://unpkg.com/@zxing/browser@latest"></script>
 </head>
 
 <body>
@@ -60,23 +61,29 @@
                 <h2>Single Barcode Generator</h2>
                 <!-- Create a form to input data for the barcode -->
                 <form id="barcodeForm">
-                    <label for="barcodeData">Data:</label>
+                    <label for="barcodeData">Enter Data:</label>
                     <input type="text" id="barcodeData" placeholder="Enter data">
                     <br>
-                    <label for="barcodeType">Barcode Type:</label>
+            
+                    <label for="barcodeType">Select Barcode Type:</label>
                     <select id="barcodeType">
-                        <option value="QR Code">QR Code</option>
-                        <option value="UPC-A">UPC-A</option>
-                        <option value="EAN-13">EAN-13</option>
+                        <option value="CODE39">Code 39</option>
+                        <option value="CODE128">Code 128</option>
+                        <option value="PHARMACODE">Pharmacode</option>
                     </select>
                     <br>
-                    <button type="button" onclick="generateBarcode()">Generate Barcode</button>
-                </form>
-                <!-- Display the generated barcode here -->
-                <div id="barcodeOutput"></div>
             
+                    <label for="displayValue">Display Value on Barcode:</label>
+                    <input type="checkbox" id="displayValue">
+                    <br>
+                </form>
+                <button onclick="generateBarcode()">Generate Barcode</button>
+                <br>
                 <!-- Add a download button and link -->
-                <button type="button" id="downloadButton" onclick="downloadBarcode()">Download Barcode</button>
+                <button onclick="downloadBarcode()">Download PNG</button>
+                <br>
+                <!-- Display the generated barcode here -->
+                <img id="barcodeImage" src="" alt="Generated Barcode">
             </div>
 
             <div class="form">
@@ -145,42 +152,74 @@
     </script>
 
     <script>
-        // For the barcode generator
-        var generatedBarcode = null;
-
+        // For the single barcode
         function generateBarcode() {
-            // Get input data and selected barcode type
-            var data = document.getElementById("barcodeData").value;
+            var barcodeData = document.getElementById("barcodeData").value;
             var barcodeType = document.getElementById("barcodeType").value;
+            var displayValue = document.getElementById("displayValue").checked;
 
-            // Generate the barcode (Replace this with your actual barcode generation code)
-            generatedBarcode = generateBarcodeImage(data, barcodeType);
+            // Set the default value of displayValue to false
+            if (displayValue === undefined) {
+                displayValue = false;
+            }
 
-            // Display the barcode on the page
-            var barcodeOutput = document.getElementById("barcodeOutput");
-            barcodeOutput.innerHTML = "";
-            barcodeOutput.appendChild(generatedBarcode);
+            var barcodeOptions = {
+                format: barcodeType,
+                width: 4,
+                height: 40,
+                displayValue: displayValue
+            };
 
-            // Enable the download button
-            document.getElementById("downloadButton").disabled = false;
+            JsBarcode("#barcodeImage", barcodeData, barcodeOptions);
         }
 
         function downloadBarcode() {
-            if (generatedBarcode) {
-                // Create an anchor element for downloading the barcode
-                var downloadLink = document.createElement("a");
-                downloadLink.href = generatedBarcode.src;
-                downloadLink.download = "barcode.png"; // Specify the filename for download
-                downloadLink.click();
-            }
-        }
+            var barcodeData = document.getElementById("barcodeData").value;
+            var barcodeType = document.getElementById("barcodeType").value;
+            var displayValue = document.getElementById("displayValue").checked;
 
-        // Function to generate a barcode image (Replace this with your actual barcode generation code)
-        function generateBarcodeImage(data, barcodeType) {
-            var barcodeImage = document.createElement("img");
-            barcodeImage.src = "barcode_generation_script.php?data=" + encodeURIComponent(data) + "&type=" + encodeURIComponent(barcodeType);
-            barcodeImage.alt = barcodeType;
-            return barcodeImage;
+            // Set the default value of displayValue to false
+            if (displayValue === undefined) {
+                displayValue = false;
+            }
+
+            var barcodeOptions = {
+                format: barcodeType,
+                width: 4,
+                height: 40,
+                displayValue: displayValue
+            };
+
+            // Generate the PNG image and set it as the source of the img element
+            JsBarcode("#barcodeImage", barcodeData, barcodeOptions);
+
+            // Create a canvas and draw the barcode onto it
+            var canvas = document.createElement('canvas');
+            canvas.width = barcodeImage.width;; // Adjust the canvas size as needed
+            canvas.height = barcodeImage.height; // Adjust the canvas size as needed
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(document.getElementById("barcodeImage"), 0, 0);
+
+            // Convert the canvas to a PNG Blob
+            canvas.toBlob(function (blob) {
+                // Create a URL for the Blob
+                var pngUrl = URL.createObjectURL(blob);
+
+                // Create a link element to trigger the download
+                var a = document.createElement("a");
+                a.href = pngUrl;
+                a.download = "barcode.png";
+                document.body.appendChild(a);
+
+                // Click the link to initiate the download
+                a.click();
+
+                // Remove the link from the document
+                document.body.removeChild(a);
+
+                // Revoke the URL to release the resources
+                URL.revokeObjectURL(pngUrl);
+            }, 'image/png');
         }
     </script>
 
