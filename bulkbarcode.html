@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bulk Barcode Generator</title>
+    <!-- Include the JsBarcode library for barcode generation -->
+    <script src="JsBarcode.all.min.js"></script>
+    <!-- Include the jsPDF library for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.16.0/pdf-lib.js"></script>
+    <style>
+        html, body {
+            font-family: monospace;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form">
+        <h2>Bulk Barcode Generator</h2>
+        <h3>To return to the main "website," please click <a href="index.html">here</a>.</h3>
+        <!-- Create a form to input data for bulk barcode generation -->
+        <form id="bulkBarcodeForm">
+            <label for="csvFile">Upload CSV File:</label>
+            <input type="file" id="csvFile" accept=".csv">
+            <br>
+            <label for="barcodeType">Barcode Type:</label>
+            <select id="barcodeType">
+                <option value="CODE39">Code 39</option>
+                <option value="CODE128">Code 128</option>
+            </select>
+            <br>
+
+            <label for="displayValue">Display Value on Barcode:</label>
+            <input type="checkbox" id="displayValue">
+            <br>
+        </form>
+        <button type="button" onclick="generateBulkBarcodes()">Generate Bulk Barcodes</button>
+        <br>
+        <!-- Add a download button for the bulk barcode PDF -->
+        <!-- <button type="button" id="downloadBulkButton" onclick="downloadBulkBarcodes()" disabled>Download Bulk Barcodes(PDF)</button> -->
+        <br>
+        <!-- Display the generated bulk barcodes here -->
+        <div id="bulkBarcodeOutput"></div>
+    </div>
+
+    <script>
+        var generatedBulkBarcodes = [];
+
+        function generateBulkBarcodes() {
+            var csvFileInput = document.getElementById("csvFile");
+            var barcodeType = document.getElementById("barcodeType").value;
+            var displayValue = document.getElementById("displayValue").checked;
+
+            if (csvFileInput.files.length === 0) {
+                alert("Please select a CSV file.");
+                return;
+            }
+
+            // Set the default value of displayValue to false
+            if (displayValue === undefined) {
+                displayValue = false;
+            }            
+
+            var file = csvFileInput.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function (event) {
+                var csvData = event.target.result;
+                var lines = csvData.split("\n");
+
+                var bulkBarcodeOutput = document.getElementById("bulkBarcodeOutput");
+                bulkBarcodeOutput.innerHTML = ""; // Clear previous barcodes
+
+                for (var i = 0; i < lines.length; i++) {
+                    var data = lines[i].trim();
+                    if (data.length > 0) {
+                        // Create a new canvas element for each barcode
+                        var canvas = document.createElement("canvas");
+                        canvas.width = 200; // Adjust the canvas size as needed
+                        canvas.height = 100;
+
+                        // Generate the barcode using JsBarcode
+                        JsBarcode(canvas, data, {
+                            format: barcodeType,
+                            width: 4,
+                            height: 40,
+                            displayValue: displayValue
+                        });
+
+                        generatedBulkBarcodes.push(canvas);
+
+                        // Append the barcode canvas to the output div
+                        bulkBarcodeOutput.appendChild(canvas);
+                    }
+                }
+
+                // Enable the download button for bulk barcodes
+                // document.getElementById("downloadBulkButton").disabled = false;
+            };
+
+            reader.readAsText(file);
+        }
+    </script>
+</body>
+</html>

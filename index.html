@@ -16,9 +16,8 @@
             margin-left: 85px;
         }
     </style>
+    <!-- Include this library for barcode generation -->
     <script src="JsBarcode.all.min.js"></script>
-    <!-- Include the jsPDF library for PDF generation -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 </head>
 
 <body>
@@ -58,61 +57,39 @@
     </div>
 
     <div id="barcode" class="pagecontent">
-        <div class="forms-container">
-            <div class="form">
-                <h2>Single Barcode Generator</h2>
-                <!-- Create a form to input data for the barcode -->
-                <form id="barcodeForm">
-                    <label for="barcodeData">Enter Data:</label>
-                    <input type="text" id="barcodeData" placeholder="Enter data">
-                    <br>
-            
-                    <label for="barcodeType">Select Barcode Type:</label>
-                    <select id="barcodeType">
-                        <option value="CODE39">Code 39</option>
-                        <option value="CODE128">Code 128</option>
-                        <option value="PHARMACODE">Pharmacode</option>
-                    </select>
-                    <br>
-            
-                    <label for="displayValue">Display Value on Barcode:</label>
-                    <input type="checkbox" id="displayValue">
-                    <br>
-                </form>
-                <button onclick="generateBarcode()">Generate Barcode</button>
+        <div class="form">
+            <h2>Single Barcode Generator</h2>
+            <h3>The bulk barcode generator is temperamental (probably because it's built using JavaScript and not actual Java). If you would like to use that tool instead, please click <a href="bulkbarcode.html"> here</a>.</h3>
+            <!-- Create a form to input data for the barcode -->
+            <form id="barcodeForm">
+                <label for="barcodeData">Enter Data:</label>
+                <input type="text" id="barcodeData" placeholder="Enter data">
                 <br>
-                <!-- Add a download button and link -->
-                <button onclick="downloadBarcode()">Download PNG</button>
+        
+                <label for="barcodeType">Select Barcode Type:</label>
+                <select id="barcodeType">
+                    <option value="CODE39">Code 39</option>
+                    <option value="CODE128">Code 128</option>
+                    <option value="PHARMACODE">Pharmacode</option>
+                </select>
                 <br>
-                <!-- Display the generated barcode here -->
-                <img id="barcodeImage" src="" alt="Generated Barcode">
-            </div>
-
-            <div class="form">
-                <h2>Bulk Barcode Generator</h2>
-                <!-- Create a form to input data for bulk barcode generation -->
-                <form id="bulkBarcodeForm">
-                    <label for="csvFile">Upload CSV File:</label>
-                    <input type="file" id="csvFile" accept=".csv">
-                    <br>
-                    <label for="barcodeType">Barcode Type:</label>
-                    <select id="barcodeType">
-                        <option value="QR Code">QR Code</option>
-                        <option value="UPC-A">UPC-A</option>
-                        <option value="EAN-13">EAN-13</option>
-                    </select>
-                    <br>
-                    <button type="button" onclick="generateBulkBarcodes()">Generate Bulk Barcodes</button>
-                </form>
-                <!-- Display the generated bulk barcodes here -->
-                <div id="bulkBarcodeOutput"></div>
-                
-                <!-- Add a download button for the bulk barcode PDF -->
-                <button type="button" id="downloadBulkButton" onclick="downloadBulkBarcodes()" disabled>Download Bulk Barcodes (PDF)</button>
-            </div>
+        
+                <label for="displayValue">Display Value on Barcode:</label>
+                <input type="checkbox" id="displayValue">
+                <br>
+            </form>
+            <!-- Add a download button and link -->
+            <button onclick="generateBarcode()">Generate Barcode</button>
+            <br>
+            <button onclick="downloadBarcode()">Download PNG</button>
+            <br>
+            <!-- Display the generated barcode here -->
+            <canvas id="barcodeCanvas"></canvas>
         </div>
+        <br>
     </div>
 
+    <!-- To log into The DrugHub -->
     <div id="database" class="pagecontent">
         <center>
             <script type="text/javascript" src="https://c1hmf904.caspio.com/dp/d044d00099be1292bc494a6496e9/emb"></script>
@@ -123,6 +100,7 @@
         </center>
     </div>
 
+    <!-- To view the report -->
     <div id="reporting" class="pagecontent">
         <h3>Reporting (an updated version to follow soon)</h3>
         <p>Below is a report that provides a broad look at counterfeiting to make clear its economic impact in the global market and the thinking/methodology behind this site. It is worth the read.</p>
@@ -154,7 +132,6 @@
     </script>
 
     <script>
-        // For the single barcode
         function generateBarcode() {
             var barcodeData = document.getElementById("barcodeData").value;
             var barcodeType = document.getElementById("barcodeType").value;
@@ -172,44 +149,22 @@
                 displayValue: displayValue
             };
 
-            JsBarcode("#barcodeImage", barcodeData, barcodeOptions);
+            // Generate the barcode using JsBarcode and set it in the canvas element
+            JsBarcode("#barcodeCanvas", barcodeData, barcodeOptions);
         }
 
         function downloadBarcode() {
-            var barcodeData = document.getElementById("barcodeData").value;
-            var barcodeType = document.getElementById("barcodeType").value;
-            var displayValue = document.getElementById("displayValue").checked;
+            // Get the canvas element
+            var canvas = document.getElementById("barcodeCanvas");
 
-            // Set the default value of displayValue to false
-            if (displayValue === undefined) {
-                displayValue = false;
-            }
-
-            var barcodeOptions = {
-                format: barcodeType,
-                width: 4,
-                height: 40,
-                displayValue: displayValue
-            };
-
-            // Generate the PNG image and set it as the source of the img element
-            JsBarcode("#barcodeImage", barcodeData, barcodeOptions);
-
-            // Create a canvas and draw the barcode onto it
-            var canvas = document.createElement('canvas');
-            canvas.width = barcodeImage.width;; // Adjust the canvas size as needed
-            canvas.height = barcodeImage.height; // Adjust the canvas size as needed
-            var ctx = canvas.getContext('2d');
-            ctx.drawImage(document.getElementById("barcodeImage"), 0, 0);
-
-            // Convert the canvas to a PNG Blob
+            // Convert the canvas to a Blob
             canvas.toBlob(function (blob) {
                 // Create a URL for the Blob
-                var pngUrl = URL.createObjectURL(blob);
+                var blobUrl = URL.createObjectURL(blob);
 
                 // Create a link element to trigger the download
                 var a = document.createElement("a");
-                a.href = pngUrl;
+                a.href = blobUrl;
                 a.download = "barcode.png";
                 document.body.appendChild(a);
 
@@ -220,78 +175,16 @@
                 document.body.removeChild(a);
 
                 // Revoke the URL to release the resources
-                URL.revokeObjectURL(pngUrl);
+                URL.revokeObjectURL(blobUrl);
             }, 'image/png');
         }
     </script>
-
-    <script>
-        var generatedBulkBarcodes = null;
-
-        function generateBulkBarcodes() {
-            var csvFileInput = document.getElementById("csvFile");
-            var barcodeType = document.getElementById("barcodeType").value;
-
-            if (csvFileInput.files.length === 0) {
-                alert("Please select a CSV file.");
-                return;
-            }
-
-            var file = csvFileInput.files[0];
-            var reader = new FileReader();
-
-            reader.onload = function (event) {
-                var csvData = event.target.result;
-                var lines = csvData.split("\n");
-                var barcodes = [];
-
-                for (var i = 0; i < lines.length; i++) {
-                    var data = lines[i].trim();
-                    if (data.length > 0) {
-                        // Generate the barcode image for each line of data
-                        var barcodeImage = generateBarcodeImage(data, barcodeType);
-                        barcodes.push(barcodeImage);
-                    }
-                }
-
-                generatedBulkBarcodes = barcodes;
-
-                // Display the bulk barcodes on the page
-                var bulkBarcodeOutput = document.getElementById("bulkBarcodeOutput");
-                bulkBarcodeOutput.innerHTML = "";
-                for (var j = 0; j < barcodes.length; j++) {
-                    bulkBarcodeOutput.appendChild(barcodes[j]);
-                }
-
-                // Enable the download button for bulk barcodes
-                document.getElementById("downloadBulkButton").disabled = false;
-            };
-
-            reader.readAsText(file);
-        }
-
-        function downloadBulkBarcodes() {
-            if (generatedBulkBarcodes && generatedBulkBarcodes.length > 0) {
-                var doc = new jsPDF();
-                for (var i = 0; i < generatedBulkBarcodes.length; i++) {
-                    if (i > 0) {
-                        doc.addPage(); // Add a new page for each barcode
-                    }
-                    var barcodeImage = generatedBulkBarcodes[i];
-                    doc.addImage(barcodeImage.src, 'PNG', 10, 10, 100, 100); // Adjust the position and size as needed
-                }
-                doc.save("bulk_barcodes.pdf");
-            }
-        }
-
-        // Function to generate a barcode image (Replace this with your actual barcode generation code)
-        function generateBarcodeImage(data, barcodeType) {
-            var barcodeImage = new Image();
-            barcodeImage.src = "barcode_generation_script.php?data=" + encodeURIComponent(data) + "&type=" + encodeURIComponent(barcodeType);
-            barcodeImage.alt = barcodeType;
-            return barcodeImage;
-        }
-    </script>
 </body>
+
+<footer>
+    <center>
+        © Roziena A Badree
+    </center>
+</footer>
 
 </html>
