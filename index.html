@@ -1,183 +1,183 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 
-<head>
-    <title> Drug-Scanner </title>
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <link rel="icon" type="image/png" href="">
-    <style>
-        .tabcode {
-            display: inline-block;
-            margin-left: 160px;
-        }
+    <head>
+        <title> Drug-Scanner </title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="icon" type="image/png" href="">
+        <style>
+            .tabcode {
+                display: inline-block;
+                margin-left: 160px;
+            }
 
-        .listcode {
-            display: inline-block;
-            margin-left: 85px;
-        }
-    </style>
-    <!-- Include this library for barcode generation -->
-    <script src="JsBarcode.all.min.js"></script>
-</head>
+            .listcode {
+                display: inline-block;
+                margin-left: 85px;
+            }
+        </style>
+        <!-- Include this library for barcode generation -->
+        <script src="JsBarcode.all.min.js"></script>
+    </head>
 
-<body>
-    <center>
-        <h1>Drug-Scanner</h1>
-        <h3>*This site is for educational purposes only.</h3>
-    </center>
-    <div class="menu">
-        <button class="tablink" onclick="openPage('main', this)" id="defaultOpen">Overview & Search</button>
-        <button class="tablink" onclick="openPage('barcode', this)" id="defaultOpen">Barcode Generation</button>
-        <button class="tablink" onclick="openPage('database', this)">The DrugHub</button>
-        <button class="tablink" onclick="openPage('reporting', this)">Reporting</button>
-        <button class="tablink" onclick="openPage('contact', this)">Contact</button>
-    </div>
-
-    <div id="main" class="pagecontent">
-        <h2> Overview </h2>
-        <p>
-            According World Health Organization, the global counterfeit drug market’s profits range from $75 to $200 billion annually and often make up half of all drugs sold in low-income countries. This website was designed as part of a school project to tackle this issue.
-            <br>
-            <br>
-            On this page, you can search for a drug by name or barcode below. The idea is that each drug's "smart tag" or barcode is unique and the consumer can track and confirm the birthplace and location of each item. Counterfeit drugs will not show up on the platform and if a "smart tag" or barcode is somehow duplicated, a search will indicate when and where the genuine item was manufactured and sold, thereby revealing the duplicate as a fake.
-            <br>
-            <br>            
-            The full drugs database can be found on The DrugHub page, which requires a login; a comprehensive report complete with methodoloy can be found on the Reporting page and lastly, if you have any questions, please feel free to send a message using the form on the Contact page.
-            <br>
-            <br>
-            If you read any of the above, thank you.
-            <br>
-            <br>
-        </p>
-        <h2> Search </h2>
-        <h3>To begin, please enter the barcode or name of a drug below. For additional instructions on how to use this tool, please click here.</h3>
+    <body>
         <center>
-            <script type="text/javascript" src="https://c1hmf904.caspio.com/dp/d044d000f415c48a3c004775b868/emb"></script>
+            <h1>Drug-Scanner</h1>
+            <h3>*This site is for educational purposes only.</h3>
         </center>
-    </div>
-
-    <div id="barcode" class="pagecontent">
-        <div class="form">
-            <h2>Single Barcode Generator</h2>
-            <h3>The bulk barcode generator is temperamental (probably because it's built using JavaScript and not actual Java). If you would like to use that tool instead, please click <a href="bulkbarcode.html"> here</a>.</h3>
-            <!-- Create a form to input data for the barcode -->
-            <form id="barcodeForm">
-                <label for="barcodeData">Enter Data:</label>
-                <input type="text" id="barcodeData" placeholder="Enter data">
-                <br>
-        
-                <label for="barcodeType">Select Barcode Type:</label>
-                <select id="barcodeType">
-                    <option value="CODE39">Code 39</option>
-                    <option value="CODE128">Code 128</option>
-                    <option value="PHARMACODE">Pharmacode</option>
-                </select>
-                <br>
-        
-                <label for="displayValue">Display Value on Barcode:</label>
-                <input type="checkbox" id="displayValue">
-                <br>
-            </form>
-            <!-- Add a download button and link -->
-            <button onclick="generateBarcode()">Generate Barcode</button>
-            <br>
-            <button onclick="downloadBarcode()">Download PNG</button>
-            <br>
-            <!-- Display the generated barcode here -->
-            <canvas id="barcodeCanvas"></canvas>
+        <div class="menu">
+            <button class="tablink" onclick="openPage('main', this)" id="defaultOpen">Overview & Search</button>
+            <button class="tablink" onclick="openPage('barcode', this)" id="defaultOpen">Barcode Generation</button>
+            <button class="tablink" onclick="openPage('database', this)">The DrugHub</button>
+            <button class="tablink" onclick="openPage('reporting', this)">Reporting</button>
+            <button class="tablink" onclick="openPage('contact', this)">Contact</button>
         </div>
-        <br>
-    </div>
 
-    <!-- To log into The DrugHub -->
-    <div id="database" class="pagecontent">
-        <center>
-            <script type="text/javascript" src="https://c1hmf904.caspio.com/dp/d044d00099be1292bc494a6496e9/emb"></script>
+        <div id="main" class="pagecontent">
+            <h2> Overview </h2>
+            <p>
+                According World Health Organization, the global counterfeit drug market’s profits range from $75 to $200 billion annually and often make up half of all drugs sold in low-income countries. This website was designed as part of a school project to tackle this issue.
+                <br>
+                <br>
+                On this page, you can search for a drug by name or barcode below. The idea is that each drug's "smart tag" or barcode is unique and the consumer can track and confirm the birthplace and location of each item. Counterfeit drugs will not show up on the platform and if a "smart tag" or barcode is somehow duplicated, a search will indicate when and where the genuine item was manufactured and sold, thereby revealing the duplicate as a fake.
+                <br>
+                <br>            
+                The full drugs database can be found on The DrugHub page, which requires a login; a comprehensive report complete with methodoloy can be found on the Reporting page and lastly, if you have any questions, please feel free to send a message using the form on the Contact page.
+                <br>
+                <br>
+                If you read any of the above, thank you.
+                <br>
+                <br>
+            </p>
+            <h2> Search </h2>
+            <h3>To begin, please enter the barcode or name of a drug below. For additional instructions on how to use this tool, please click here.</h3>
+            <center>
+                <script type="text/javascript" src="https://c1hmf904.caspio.com/dp/d044d000f415c48a3c004775b868/emb"></script>
+            </center>
+        </div>
+
+        <div id="barcode" class="pagecontent">
+            <div class="form">
+                <h2>Single Barcode Generator</h2>
+                <h3>The bulk barcode generator is temperamental (probably because it's built using JavaScript and not actual Java). If you would like to use that tool instead, please click <a href="bulkbarcode.html"> here</a>.</h3>
+                <!-- Create a form to input data for the barcode -->
+                <form id="barcodeForm">
+                    <label for="barcodeData">Enter Data:</label>
+                    <input type="text" id="barcodeData" placeholder="Enter data">
+                    <br>
+            
+                    <label for="barcodeType">Select Barcode Type:</label>
+                    <select id="barcodeType">
+                        <option value="CODE39">Code 39</option>
+                        <option value="CODE128">Code 128</option>
+                        <option value="PHARMACODE">Pharmacode (Numerical ONLY)</option>
+                    </select>
+                    <br>
+            
+                    <label for="displayValue">Display Value on Barcode:</label>
+                    <input type="checkbox" id="displayValue">
+                    <br>
+                </form>
+                <!-- Add a download button and link -->
+                <button onclick="generateBarcode()">Generate Barcode</button>
+                <br>
+                <button onclick="downloadBarcode()">Download PNG</button>
+                <br>
+                <!-- Display the generated barcode here -->
+                <canvas id="barcodeCanvas"></canvas>
+            </div>
             <br>
-            To reset your password, please click <a href="https://c1hmf904.caspio.com/dp/d044d0002ac2fcf95554419a8ff2">here</a>.
-            <br>
-            If you are requesting access to the database for the first time, please click 'Contact' on the menu above and send us a request.
-        </center>
-    </div>
+        </div>
 
-    <!-- To view the report -->
-    <div id="reporting" class="pagecontent">
-        <h3>Reporting (an updated version to follow soon)</h3>
-        <p>Below is a report that provides a broad look at counterfeiting to make clear its economic impact in the global market and the thinking/methodology behind this site. It is worth the read.</p>
-        <iframe src="Final_Project_Paper.pdf" width=100% height=100% frameborder="0"></iframe>
-    </div>
+        <!-- To log into The DrugHub -->
+        <div id="database" class="pagecontent">
+            <center>
+                <script type="text/javascript" src="https://c1hmf904.caspio.com/dp/d044d00099be1292bc494a6496e9/emb"></script>
+                <br>
+                To reset your password, please click <a href="https://c1hmf904.caspio.com/dp/d044d0002ac2fcf95554419a8ff2">here</a>.
+                <br>
+                If you are requesting access to the database for the first time, please send a message using the form on the Contact page.
+            </center>
+        </div>
 
-    <!-- My contact me page -->
-    <div id="contact" class="pagecontent">
-        <h3>If you have any inquiries, please fill out and submit the form below.</h3>
-        <center>
-            <script type="text/javascript" src="https://c1hmf904.caspio.com/dp/d044d000b51df349ce0049edb302/emb"></script>
-        </center>
-    </div>
+        <!-- To view the report -->
+        <div id="reporting" class="pagecontent">
+            <h3>Reporting (an updated version to follow soon)</h3>
+            <p>Below is a report that provides a broad look at counterfeiting to make clear its economic impact in the global market and the thinking/methodology behind this site. It is worth the read.</p>
+            <iframe src="Final_Project_Paper.pdf" width=100% height=100% frameborder="0"></iframe>
+        </div>
 
-    <script>
-        // For the menu
-        function openPage(pageName, elmnt) {
-            // Hide all elements with class="pagecontent" by default
-            var i, pagecontent, tablinks;
-            pagecontent = document.getElementsByClassName("pagecontent");
-            for (i = 0; i < pagecontent.length; i++) {
-                pagecontent[i].style.display = "none";
+        <!-- My contact me page -->
+        <div id="contact" class="pagecontent">
+            <h3>If you have any inquiries, please fill out and submit the form below.</h3>
+            <center>
+                <script type="text/javascript" src="https://c1hmf904.caspio.com/dp/d044d000b51df349ce0049edb302/emb"></script>
+            </center>
+        </div>
+
+        <script>
+            // For the menu
+            function openPage(pageName, elmnt) {
+                // Hide all elements with class="pagecontent" by default
+                var i, pagecontent, tablinks;
+                pagecontent = document.getElementsByClassName("pagecontent");
+                for (i = 0; i < pagecontent.length; i++) {
+                    pagecontent[i].style.display = "none";
+                }
+                // Show the specific tab content
+                document.getElementById(pageName).style.display = "block";
             }
-            // Show the specific tab content
-            document.getElementById(pageName).style.display = "block";
-        }
-        // Get the element with id="defaultOpen" and click on it
-        document.getElementById("defaultOpen").click();
-    </script>
+            // Get the element with id="defaultOpen" and click on it
+            document.getElementById("defaultOpen").click();
+        </script>
 
-    <script>
-        function generateBarcode() {
-            var barcodeData = document.getElementById("barcodeData").value;
-            var barcodeType = document.getElementById("barcodeType").value;
-            var displayValue = document.getElementById("displayValue").checked;
+        <script>
+            function generateBarcode() {
+                var barcodeData = document.getElementById("barcodeData").value;
+                var barcodeType = document.getElementById("barcodeType").value;
+                var displayValue = document.getElementById("displayValue").checked;
 
-            // Set the default value of displayValue to false
-            if (displayValue === undefined) {
-                displayValue = false;
+                // Set the default value of displayValue to false
+                if (displayValue === undefined) {
+                    displayValue = false;
+                }
+
+                var barcodeOptions = {
+                    format: barcodeType,
+                    width: 4,
+                    height: 40,
+                    displayValue: displayValue
+                };
+
+                // Generate the barcode using JsBarcode and set it in the canvas element
+                JsBarcode("#barcodeCanvas", barcodeData, barcodeOptions);
             }
 
-            var barcodeOptions = {
-                format: barcodeType,
-                width: 4,
-                height: 40,
-                displayValue: displayValue
-            };
+            function downloadBarcode() {
+                // Get the canvas element
+                var canvas = document.getElementById("barcodeCanvas");
 
-            // Generate the barcode using JsBarcode and set it in the canvas element
-            JsBarcode("#barcodeCanvas", barcodeData, barcodeOptions);
-        }
+                // Convert the canvas to a Blob
+                canvas.toBlob(function (blob) {
+                    // Create a URL for the Blob
+                    var blobUrl = URL.createObjectURL(blob);
 
-        function downloadBarcode() {
-            // Get the canvas element
-            var canvas = document.getElementById("barcodeCanvas");
+                    // Create a link element to trigger the download
+                    var a = document.createElement("a");
+                    a.href = blobUrl;
+                    a.download = "barcode.png";
+                    document.body.appendChild(a);
 
-            // Convert the canvas to a Blob
-            canvas.toBlob(function (blob) {
-                // Create a URL for the Blob
-                var blobUrl = URL.createObjectURL(blob);
+                    // Click the link to initiate the download
+                    a.click();
 
-                // Create a link element to trigger the download
-                var a = document.createElement("a");
-                a.href = blobUrl;
-                a.download = "barcode.png";
-                document.body.appendChild(a);
+                    // Remove the link from the document
+                    document.body.removeChild(a);
 
-                // Click the link to initiate the download
-                a.click();
-
-                // Remove the link from the document
-                document.body.removeChild(a);
-
-                // Revoke the URL to release the resources
-                URL.revokeObjectURL(blobUrl);
-            }, 'image/png');
-        }
-    </script>
-</body>
+                    // Revoke the URL to release the resources
+                    URL.revokeObjectURL(blobUrl);
+                }, 'image/png');
+            }
+        </script>
+    </body>
 </html>
